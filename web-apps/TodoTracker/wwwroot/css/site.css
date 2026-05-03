@@ -1,0 +1,18 @@
+/* Todo Project Tracker — site styles */
+
+html, body {
+    height: 100%;
+}
+
+.nav-link.active {
+    background-color: #0d6efd1a;
+    border-radius: 4px;
+}
+
+.card-header h5 {
+    font-size: 1rem;
+}
+
+.list-group-item:hover {
+    background-color: #f8f9fa;
+}

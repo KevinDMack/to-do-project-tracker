@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/web-app-tests/">
+    <Project Path="web-app-tests/TodoTracker.Tests/TodoTracker.Tests.csproj" />
+  </Folder>
+  <Folder Name="/web-apps/">
+    <Project Path="web-apps/TodoTracker/TodoTracker.csproj" />
+  </Folder>
+</Solution>

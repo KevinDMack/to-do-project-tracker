@@ -1,0 +1,34 @@
+{
+  "name": "Todo Project Tracker Dev Container",
+  "image": "mcr.microsoft.com/devcontainers/dotnet:8.0",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/azure-cli:1": {},
+    "ghcr.io/devcontainers/features/terraform:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "postCreateCommand": "dotnet restore /workspaces/to-do-project-tracker/web-apps/TodoTracker/TodoTracker.csproj && dotnet restore /workspaces/to-do-project-tracker/web-app-tests/TodoTracker.Tests/TodoTracker.Tests.csproj",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csharp",
+        "ms-dotnettools.csdevkit",
+        "ms-azuretools.vscode-docker",
+        "hashicorp.terraform",
+        "ms-vscode.azurecli",
+        "GitHub.copilot",
+        "ms-vscode.vscode-node-azure-pack"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "dotnet.defaultSolution": "TodoTracker.slnx"
+      }
+    }
+  },
+  "forwardPorts": [5001, 8080],
+  "portsAttributes": {
+    "5001": { "label": "TodoTracker (dev)", "onAutoForward": "notify" },
+    "8080": { "label": "TodoTracker (docker)", "onAutoForward": "notify" }
+  },
+  "remoteUser": "vscode"
+}

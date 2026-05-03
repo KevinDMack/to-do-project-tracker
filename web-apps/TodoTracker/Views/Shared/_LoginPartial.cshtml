@@ -1,0 +1,18 @@
+@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+
+@if (User.Identity?.IsAuthenticated == true)
+{
+    var displayName = User.FindFirst("name")?.Value
+                      ?? User.FindFirst(ClaimTypes.Name)?.Value
+                      ?? User.Identity.Name
+                      ?? "User";
+    <span class="navbar-text text-white me-3">👤 @displayName</span>
+    <a class="btn btn-outline-light btn-sm"
+       asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignOut">Sign out</a>
+}
+else
+{
+    <a class="btn btn-outline-light btn-sm"
+       asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignIn">Sign in</a>
+}

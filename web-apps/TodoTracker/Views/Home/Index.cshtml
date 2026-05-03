@@ -1,0 +1,149 @@
+@model TodoTracker.Models.ProjectViewModel
+@{
+    ViewData["Title"] = "Projects";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row" style="height: calc(100vh - 80px);">
+    <!-- ===== Left Sidebar: Project List ===== -->
+    <div class="col-md-3 col-lg-2 border-end overflow-auto py-3 bg-light">
+        <h6 class="text-uppercase text-muted fw-bold px-3 mb-2">Projects</h6>
+        <ul class="nav flex-column">
+            @foreach (var project in Model.AllProjects)
+            {
+                var isActive = string.Equals(project.Name, Model.SelectedProject?.Name, StringComparison.OrdinalIgnoreCase);
+                <li class="nav-item">
+                    <a class="nav-link @(isActive ? "active fw-bold" : "text-dark")"
+                       href="/?project=@Uri.EscapeDataString(project.Name)">
+                        📁 @project.Name
+                    </a>
+                </li>
+            }
+            @if (!Model.AllProjects.Any())
+            {
+                <li class="nav-item px-3 text-muted">No projects found.</li>
+            }
+        </ul>
+    </div>
+
+    <!-- ===== Main Content: Activity Panels ===== -->
+    <div class="col-md-9 col-lg-10 overflow-auto py-3">
+        @if (Model.SelectedProject != null)
+        {
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>📁 @Model.SelectedProject.Name</h2>
+            </div>
+
+            @if (!Model.SelectedProject.Activities.Any())
+            {
+                <div class="alert alert-info">No activities found for this project.</div>
+            }
+
+            @foreach (var activity in Model.SelectedProject.Activities)
+            {
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header d-flex justify-content-between align-items-center bg-white">
+                        <h5 class="mb-0">🏷️ @activity.Name</h5>
+                        <button class="btn btn-sm btn-primary"
+                                onclick="openAddTaskModal('@Html.Raw(Html.Encode(Model.SelectedProject.Name))', '@Html.Raw(Html.Encode(activity.Name))')">
+                            ➕ Add
+                        </button>
+                    </div>
+                    <div class="card-body p-0">
+                        @if (!activity.Tasks.Any())
+                        {
+                            <p class="text-muted p-3 mb-0">No tasks yet.</p>
+                        }
+                        else
+                        {
+                            <ul class="list-group list-group-flush">
+                                @foreach (var task in activity.Tasks)
+                                {
+                                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <span class="fw-semibold">@task.CleanTitle</span>
+                                            @if (!string.IsNullOrWhiteSpace(task.Notes))
+                                            {
+                                                <br /><small class="text-muted">@task.Notes</small>
+                                            }
+                                        </div>
+                                        @if (task.DueDate.HasValue)
+                                        {
+                                            <span class="badge bg-secondary ms-2">@task.DueDate.Value.ToString("MMM d")</span>
+                                        }
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="text-center mt-5 text-muted">
+                <p>Select a project from the left panel to view its activities and tasks.</p>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    function openAddTaskModal(project, activity) {
+        document.getElementById('taskProject').value = project;
+        document.getElementById('taskActivity').value = activity;
+        document.getElementById('displayProject').textContent = project;
+        document.getElementById('displayActivity').textContent = activity;
+        document.getElementById('taskTitle').value = '';
+        document.getElementById('taskDueDate').value = '';
+        document.getElementById('taskNotes').value = '';
+        document.getElementById('taskFormError').classList.add('d-none');
+        var modal = new bootstrap.Modal(document.getElementById('addTaskModal'));
+        modal.show();
+    }
+
+    document.getElementById('saveTaskBtn').addEventListener('click', async function () {
+        const title = document.getElementById('taskTitle').value.trim();
+        const project = document.getElementById('taskProject').value;
+        const activity = document.getElementById('taskActivity').value;
+        const dueDate = document.getElementById('taskDueDate').value;
+        const notes = document.getElementById('taskNotes').value.trim();
+        const errorDiv = document.getElementById('taskFormError');
+
+        if (!title) {
+            errorDiv.textContent = 'Task title is required.';
+            errorDiv.classList.remove('d-none');
+            return;
+        }
+
+        const payload = {
+            projectName: project,
+            activityName: activity,
+            title: title,
+            dueDate: dueDate || null,
+            notes: notes || null
+        };
+
+        try {
+            const response = await fetch('/api/Todo/tasks', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                bootstrap.Modal.getInstance(document.getElementById('addTaskModal')).hide();
+                location.reload();
+            } else {
+                const data = await response.json();
+                errorDiv.textContent = data.error || 'An error occurred.';
+                errorDiv.classList.remove('d-none');
+            }
+        } catch (err) {
+            errorDiv.textContent = 'Network error. Please try again.';
+            errorDiv.classList.remove('d-none');
+        }
+    });
+</script>
+}

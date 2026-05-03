@@ -1,0 +1,5 @@
+# Ignore build artifacts and sensitive files
+bin/
+obj/
+*.user
+appsettings.Development.json
