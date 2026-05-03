@@ -1,0 +1,111 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run Tests",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/run-tests.sh",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "Build Docker Image",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/build-docker-images.sh",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Build & Push Docker Image",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/build-docker-images.sh --push --registry ${input:registryServer} --tag ${input:imageTag}",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Create TF State Rig",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/create-tf-state-rig.sh ${input:tfStateRg} ${input:tfStateSa} ${input:tfStateContainer}",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Deploy Terraform (Plan Only)",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/deploy-terraform.sh --plan-only",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Deploy Terraform",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/deploy-terraform.sh",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Run App (dotnet)",
+      "type": "shell",
+      "command": "dotnet run --project ${workspaceFolder}/web-apps/TodoTracker/TodoTracker.csproj",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "registryServer",
+      "type": "promptString",
+      "description": "ACR login server (e.g. myacr.azurecr.us)",
+      "default": ""
+    },
+    {
+      "id": "imageTag",
+      "type": "promptString",
+      "description": "Docker image tag",
+      "default": "latest"
+    },
+    {
+      "id": "tfStateRg",
+      "type": "promptString",
+      "description": "Resource group for Terraform state storage",
+      "default": ""
+    },
+    {
+      "id": "tfStateSa",
+      "type": "promptString",
+      "description": "Storage account name for Terraform state",
+      "default": ""
+    },
+    {
+      "id": "tfStateContainer",
+      "type": "promptString",
+      "description": "Blob container name for Terraform state",
+      "default": "tfstate"
+    }
+  ]
+}

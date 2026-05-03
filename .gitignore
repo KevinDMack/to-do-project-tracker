@@ -1,0 +1,35 @@
+# .NET build artifacts
+bin/
+obj/
+*.user
+.vs/
+
+# Test results
+test-results/
+TestResults/
+*.trx
+*.coverage
+
+# Sensitive configuration (never commit real secrets)
+# appsettings.Development.json is tracked with placeholder values only — fill in locally and do not re-commit with real secrets
+**/appsettings.*.local.json
+
+# Terraform
+infra/.terraform/
+infra/.terraform.lock.hcl
+infra/tfplan
+infra/*.tfvars
+!infra/*.tfvars.example
+infra/terraform.tfstate
+infra/terraform.tfstate.backup
+
+# Docker
+# (intentionally empty — .dockerignore files should be tracked)
+
+# IDE
+.vscode/settings.json
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

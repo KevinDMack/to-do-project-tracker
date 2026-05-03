@@ -1,0 +1,42 @@
+name: PR — Run Tests
+
+on:
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  checks: write
+
+jobs:
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore web-app-tests/TodoTracker.Tests/TodoTracker.Tests.csproj
+
+      - name: Run tests
+        run: |
+          dotnet test \
+            web-app-tests/TodoTracker.Tests/TodoTracker.Tests.csproj \
+            --configuration Release \
+            --logger "trx;LogFileName=test-results.trx" \
+            --results-directory ./test-results
+
+      - name: Publish test results
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: xUnit Test Results
+          path: test-results/*.trx
+          reporter: dotnet-trx
