@@ -49,7 +49,7 @@ Because the infrastructure targets **Azure Government**, the Entra ID instance e
    - `Tasks.ReadWrite`
    - `User.Read`
 3. Click **Add permissions**.
-4. Click **Grant admin consent for \<your tenant\>** and confirm.
+4. Click **Grant admin consent for `<your tenant>`** and confirm.
 
 ---
 
