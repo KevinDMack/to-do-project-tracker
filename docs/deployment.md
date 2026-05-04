@@ -35,7 +35,12 @@ Then run:
 ./scripts/deploy-terraform.sh
 ```
 
-### 3. Configure GitHub Secrets
+### 3. Configure Entra ID Authentication
+
+Before setting GitHub secrets, complete the Entra ID app registration and obtain the required values.  
+See [docs/entra-id.md](entra-id.md) for the full step-by-step guide.
+
+### 4. Configure GitHub Secrets
 
 Add the following secrets to your GitHub repository:
 

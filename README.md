@@ -133,3 +133,4 @@ This project uses a multi-agent model. Each agent has a defined role and respons
 - [Architecture](docs/architecture.md)
 - [Development Guide](docs/development.md)
 - [Deployment Guide](docs/deployment.md)
+- [Entra ID Authentication](docs/entra-id.md)
